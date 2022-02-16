@@ -201,7 +201,7 @@ def train_step(state,
   train_keys = ['inputs', 'targets']
   (inputs, targets) = [batch.get(k, None) for k in train_keys]
 
-  weights = jnp.where(inputs > 0, 1, 0).astype(jnp.float32)
+  weights = jnp.where(targets > 0, 1, 0).astype(jnp.float32)
 
   dropout_rng = jax.random.fold_in(dropout_rng, state.step)
 
