@@ -55,7 +55,7 @@ flags.DEFINE_integer(
     help=('Frequency of eval during training, e.g. every 1000 steps.'))
 
 flags.DEFINE_integer(
-    'num_train_steps', default=75000, help=('Number of train steps.'))
+    'num_train_steps', default=20000, help=('Number of train steps.'))
 
 flags.DEFINE_float('learning_rate', default=0.05, help=('Learning rate.'))
 
@@ -201,7 +201,8 @@ def train_step(state,
   train_keys = ['inputs', 'targets']
   (inputs, targets) = [batch.get(k, None) for k in train_keys]
 
-  weights = jnp.where(targets > 0, 1, 0).astype(jnp.float32)
+  weights = jnp.where(inputs > 0, 1, 0).astype(jnp.float32)
+#  weights = jnp.where(targets > 0, 1, 0).astype(jnp.float32)
 
   dropout_rng = jax.random.fold_in(dropout_rng, state.step)
 
@@ -220,7 +221,7 @@ def train_step(state,
   (_, logits), grads = grad_fn(state.params)
   grads = jax.lax.pmean(grads, "batch")
   new_state = state.apply_gradients(grads=grads)
-  metrics = compute_metrics(logits, inputs, weights)
+  metrics = compute_metrics(logits, targets, weights)
   metrics["learning_rate"] = lr
 
   return new_state, metrics
@@ -345,7 +346,6 @@ def main(argv):
     state, metrics = p_train_step(
         state, batch, dropout_rng=dropout_rngs)
     metrics_all.append(metrics)
-
     if (step + 1) % eval_freq == 0:
       metrics_all = common_utils.get_metrics(metrics_all)
       lr = metrics_all.pop('learning_rate').mean()
