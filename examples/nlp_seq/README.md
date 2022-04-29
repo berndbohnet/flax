@@ -21,7 +21,7 @@ The model should run with other configurations and hardware, but explicitly test
 
 | Hardware |  Batch size  | Learning rate | Training time | Accuracy  | TensorBoard.dev |
 |:---:|:---:|:---:|:---:|:---:|:---:|
-| Nvidia Titan V (12GB) | 64  |  0.05 | 41m | 92.5% | [2022-02-18](https://tensorboard.dev/experiment/dZTE3FoYSxarf29dKji10w/) |
+| Nvidia Titan V (12GB) | 64  |  0.05 | 1:36h | 92.5% | [2022-04-29](https://tensorboard.dev/experiment/AuVcQWAGSnqdRMc9kekeog) |
 
 ### Running 
 ```
